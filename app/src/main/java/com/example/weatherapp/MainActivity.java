@@ -15,10 +15,13 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -28,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
     TextView weatherForecast;
     RelativeLayout relativeLayout;
 
+   public void displayExceptionMessage(String msg)
+    {
+        msg = "Could not check weather";
+        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+    }
+
 
     public void checkWeather(View view){
 
@@ -36,22 +45,15 @@ public class MainActivity extends AppCompatActivity {
 
         String ecodedCityName = null;
 
-        try {
 
+        try {
             ecodedCityName = URLEncoder.encode(cityEditText.getText().toString(), "UTF-8");
 
             DownloadTask task = new DownloadTask();
             task.execute("https://api.openweathermap.org/data/2.5/weather?q=" + ecodedCityName + "&appid=0f5417a710a99da9a4b0bd9023bfafeb");
-
         } catch (UnsupportedEncodingException e) {
-
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(),"Could not check weather",Toast.LENGTH_LONG);
-
+            displayExceptionMessage(e.getMessage());
         }
-
-
-
 
     }
 
@@ -68,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
     public  class DownloadTask extends AsyncTask<String, Void, String>{
 
-
-
         @Override
         protected String doInBackground(String... urls) {
 
@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
             URL url;
             HttpURLConnection urlConnection;
 
-            try {
 
+            try {
                 url = new URL(urls[0]);
                 urlConnection = (HttpURLConnection)url.openConnection();
                 InputStream in = urlConnection.getInputStream();
@@ -86,18 +86,22 @@ public class MainActivity extends AppCompatActivity {
 
                 int data = reader.read();
 
-                while (data != -1){
+                while (data != -1) {
 
-                    char current = (char)data;
+                    char current = (char) data;
                     result += current;
                     data = reader.read();
 
                 }
                 return result;
+            } catch(MalformedURLException e){
+                e.printStackTrace();
+                displayExceptionMessage(e.getMessage());
 
-            } catch (Exception e) {
-
-                Toast.makeText(getApplicationContext(),"Could not check weather",Toast.LENGTH_LONG);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                displayExceptionMessage(e.getMessage());
 
             }
 
@@ -109,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             try {
-
                 String message = "";
 
                 JSONObject jsonObject = new JSONObject(result);
@@ -204,18 +207,15 @@ public class MainActivity extends AppCompatActivity {
 
                 }else {
 
-                    Toast.makeText(getApplicationContext(),"Could not check weather",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Could not check weather",Toast.LENGTH_LONG).show();
 
                 }
-
             } catch (JSONException e) {
-
-                Toast.makeText(getApplicationContext(),"Could not check weather",Toast.LENGTH_LONG);
-
+                e.printStackTrace();
+                displayExceptionMessage(e.getMessage());
             }
 
         }
+
     }
-
-
 }
