@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
+    android:id="@+id/relativeLayout"
     tools:context=".MainActivity" >
 
     <TextView
@@ -52,4 +53,7 @@
         android:padding="8dp"
         android:textColor="#62FC01"
         android:textSize="28sp" />
+
+
+
 </RelativeLayout>

@@ -1,29 +1,24 @@
 package com.example.weatherapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
-import android.inputmethodservice.InputMethodService;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UTFDataFormatException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -31,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText cityEditText;
     TextView weatherForecast;
+    RelativeLayout relativeLayout;
 
 
     public void checkWeather(View view){
@@ -55,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+
+
     }
 
     @Override
@@ -64,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         cityEditText = findViewById(R.id.cityEditText);
         weatherForecast = findViewById(R.id.weatherForecast);
+        relativeLayout = findViewById(R.id.relativeLayout);
 
     }
 
@@ -135,7 +134,74 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if(message != ""){
 
+                    Resources res = getResources();
+
+                    switch (message) {
+                        case "broken clouds":
+                        case "scattered clouds": {
+                            Drawable drawable = res.getDrawable(R.drawable.brokenclouds);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        case "clear sky": {
+                            Drawable drawable = res.getDrawable(R.drawable.clearsky);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        case "haze": {
+                            Drawable drawable = res.getDrawable(R.drawable.haze);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        case "light rain":
+                        case "light rainmist":
+                        case "moderate rain": {
+                            Drawable drawable = res.getDrawable(R.drawable.rain);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        case "thunderstorm": {
+                            Drawable drawable = res.getDrawable(R.drawable.lighting);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        case "heavy intensity rain":
+                        case "light intensity drizzleshower rain":
+                        case "thunderstorm with heavy rain": {
+                            Drawable drawable = res.getDrawable(R.drawable.heavyrain);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        case "mist": {
+                            Drawable drawable = res.getDrawable(R.drawable.mist);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        case "overcast clouds": {
+                            Drawable drawable = res.getDrawable(R.drawable.overcastclouds);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        case "light intensity shower rain": {
+                            Drawable drawable = res.getDrawable(R.drawable.thunderstormrain);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        case "shower rain":
+                        case "drizzle": {
+                            Drawable drawable = res.getDrawable(R.drawable.drizzle);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                        default: {
+                            Drawable drawable = res.getDrawable(R.drawable.background);
+                            relativeLayout.setBackground(drawable);
+                            break;
+                        }
+                    }
+
                     weatherForecast.setText("Description : " + message);
+
                 }else {
 
                     Toast.makeText(getApplicationContext(),"Could not check weather",Toast.LENGTH_LONG);
